@@ -23,6 +23,7 @@
 		52ED5FA02CB4489000269B8A /* NavigateUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52ED5F9F2CB4489000269B8A /* NavigateUITests.m */; };
 		52ED5FA22CB4489000269B8A /* NavigateUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 52ED5FA12CB4489000269B8A /* NavigateUITestsLaunchTests.m */; };
 		52ED5FA52CB4489000269B8A /* Navigate.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 52ED5F762CB4488E00269B8A /* Navigate.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		56460A82794ED9A99552C43A /* libPods-appclip-Navigate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9171FE25F988D5CC24831631 /* libPods-appclip-Navigate.a */; };
 		7699B88040F8A987B510C191 /* libPods-appclip-appclipTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-appclip-appclipTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9520B47D27A8018BF12318EC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3C43B4473D17EEC6FDD1AE9D /* PrivacyInfo.xcprivacy */; };
@@ -152,6 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56460A82794ED9A99552C43A /* libPods-appclip-Navigate.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,9 +393,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 52ED5FA62CB4489000269B8A /* Build configuration list for PBXNativeTarget "Navigate" */;
 			buildPhases = (
+				72918108FD084D3FB79B984C /* [CP] Check Pods Manifest.lock */,
 				52ED5F722CB4488E00269B8A /* Sources */,
 				52ED5F732CB4488E00269B8A /* Frameworks */,
 				52ED5F742CB4488E00269B8A /* Resources */,
+				763053173035FD3514162743 /* [CP] Embed Pods Frameworks */,
+				262161484D9758F6ABCE016B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -566,6 +571,62 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-appclip/Pods-appclip-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		262161484D9758F6ABCE016B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-appclip-Navigate/Pods-appclip-Navigate-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-appclip-Navigate/Pods-appclip-Navigate-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-appclip-Navigate/Pods-appclip-Navigate-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		72918108FD084D3FB79B984C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-appclip-Navigate-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		763053173035FD3514162743 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-appclip-Navigate/Pods-appclip-Navigate-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-appclip-Navigate/Pods-appclip-Navigate-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-appclip-Navigate/Pods-appclip-Navigate-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
@@ -881,6 +942,7 @@
 		};
 		52ED5FA72CB4489000269B8A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A08BBD0432E95C635BF14FB /* Pods-appclip-Navigate.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -921,6 +983,7 @@
 		};
 		52ED5FA82CB4489000269B8A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 46F574ED95FF90E043FBCFD0 /* Pods-appclip-Navigate.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1142,7 +1205,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -1215,7 +1281,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

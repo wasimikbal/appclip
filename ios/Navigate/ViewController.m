@@ -21,7 +21,7 @@ URLForResource:@"main" withExtension:@"jsbundle"];
 
   // Value of moduleName should be equal to appName value set in index file
   RCTRootView *rootView = [[RCTRootView alloc]
-initWithBundleURL:jsCodeLocation moduleName:@"ArticleApp"
+initWithBundleURL:jsCodeLocation moduleName:@"AppClip"
 initialProperties:nil launchOptions:nil];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f
 green:1.0f blue:1.0f alpha:1];

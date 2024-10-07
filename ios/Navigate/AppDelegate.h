@@ -1,14 +1,8 @@
-//
-//  AppDelegate.h
-//  Navigate
-//
-//  Created by MacBook Pro  on 07/10/2024.
-//
-
+#import <React/RCTBridgeDelegate.h>
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate>
 
+@property (nonatomic, strong) UIWindow *window;
 
 @end
-

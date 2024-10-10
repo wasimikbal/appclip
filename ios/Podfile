@@ -28,7 +28,12 @@ target 'appclip' do
     # Pods for testing
   end
   target 'Navigate' do
-    inherit! :complete
+    pod 'React', :path => '../node_modules/react-native/'
+    pod 'React-Core', :path => '../node_modules/react-native/'
+    pod 'React-RCTImage', :path => '../node_modules/react-native/Libraries/Image'
+    pod 'React-RCTNetwork', :path => '../node_modules/react-native/Libraries/Network'
+    pod 'React-RCTSettings', :path => '../node_modules/react-native/Libraries/Settings'
+    pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
   end
 
   post_install do |installer|

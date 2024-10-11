@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Changi Airport</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <!--  jquery -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <!--  map CSS -->
+  <link href="https://atoms-sdk.dev.cag.spatialverse.online/2.0.0/AtomsMap.css" rel="stylesheet" />
+  <!--  bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <style>
+    .breadcrumbs {
+      width: 100%;
+      border-radius: 0.3rem;
+      display: inline-flex;
+    }
+
+    .breadcrumbs__item {
+      background: #edf1f5;
+      color: #333;
+      outline: none;
+      padding: 8px 8px 8px 12px;
+      position: relative;
+      text-decoration: none;
+      transition: background 0.2s linear;
+      border: 1px solid #cbd2d9;
+      width: calc(95% / 3);
+      cursor: pointer;
+    }
+
+    .breadcrumbs__item:hover:after,
+    .breadcrumbs__item:hover {
+      background: #dde1e5;
+    }
+
+    .breadcrumbs__item:focus:after,
+    .breadcrumbs__item:focus,
+    .breadcrumbs__item.is-active:focus {
+      background: #323f4a;
+      color: #fff;
+    }
+
+    .breadcrumbs__item:after,
+    .breadcrumbs__item:before {
+      background: #edf1f5;
+      bottom: 0;
+      clip-path: polygon(50% 50%, -50% -50%, 0 100%);
+      content: "";
+      left: 100%;
+      position: absolute;
+      top: 0;
+      transition: background 0.2s linear;
+      width: 1em;
+      z-index: 1;
+    }
+
+    .breadcrumbs__item:before {
+      background: #cbd2d9;
+      margin-left: 1px;
+    }
+
+    .breadcrumbs__item:last-child {
+      border-right: none;
+    }
+
+    #building-dropdown-icon,
+    #floor-dropdown-icon {
+      position: absolute;
+      right: 2px;
+      font-size: 20px;
+      top: 40%;
+      cursor: pointer;
+      width: 8px;
+      height: 8px;
+      transform: rotate(135deg);
+      border-right: 1px solid #495057;
+      border-top: 1px solid #495057;
+    }
+
+    .filter-menu {
+      width: 100%;
+      position: absolute;
+      top: 100%;
+      z-index: 30 !important;
+      left: 0;
+      background-color: #fff;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .filter-menu-option {
+      padding: 4px;
+    }
+
+    .filter-menu-option:hover {
+      background: #edf1f5;
+    }
+
+    .selected-item {
+      background-color: #edf1f5;
+    }
+
+    .left-panel {
+      width: 320px;
+      background-color: white;
+      padding: 4px;
+      z-index: 10;
+      position: fixed;
+      top: 0;
+      left: 0;
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .maplibregl-popup-content {
+      background-color: #f7c651;
+    }
+
+    .maplibregl-popup-tip {
+      border-top-color: #f7c651 !important;
+    }
+
+    #map-popup-button {
+      background-color: #f7c651;
+      border: none;
+    }
+
+    #map-popup-button:focus {
+      outline: none;
+    }
+
+    .routing-board {
+      width: 100%;
+      padding-bottom: 10px;
+      max-height: calc(100vh - 50px);
+      overflow-y: auto;
+    }
+
+    .title {
+      color: #324565;
+      padding: 8px;
+    }
+
+    .destination-box {
+      width: 100%;
+      padding: 8px;
+    }
+
+    .empty-box {
+      height: 54px;
+      width: 100%;
+      background-color: #fff;
+    }
+
+    .drag-icon {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+      margin-right: 8px;
+      background-image: url('../icons/hamburger.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: move;
+    }
+
+    .route-input-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .route-input-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      border: 1px solid #ced4da;
+      background-color: #e3f2fd;
+      border-radius: 4px;
+    }
+
+    .pick-mode {
+      border: 1px solid #324565;
+    }
+
+    .route-input {
+      flex: 1;
+      outline: none;
+      border: none;
+      background-color: #e3f2fd;
+      font-size: 13px;
+      padding: 8px 6px;
+    }
+
+    .route-pick-icon {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      min-height: 18px;
+      margin-right: 8px;
+      background-image: url('../icons/pick.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .remove-destination-btn {
+      border: 1px solid #ced4da;
+      border-radius: 50%;
+      height: 20px;
+      width: 20px;
+      font-size: 14px;
+      color: #324565;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+
+    .search-menu {
+      position: absolute;
+      left: 36px;
+      width: calc(100% - 48px);
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .search-item {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .search-item:hover {
+      background-color: #eae9e9;
+    }
+
+    .search-item>div:nth-child(2) {
+      color: grey;
+    }
+
+    .shown {
+      display: block;
+      max-height: 300px;
+      background-color: white;
+      overflow-y: auto;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #route-btn {
+      outline: none;
+      border: none;
+      padding: 4px 16px;
+      border-radius: 4px;
+      margin-left: 8px;
+      background-color: #24418c;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+
+    #reset-route-btn {
+      outline: none;
+      border: 1px solid #24418c;
+      padding: 4px 16px;
+      border-radius: 4px;
+      margin-left: 8px;
+      color: #24418c;
+      cursor: pointer;
+      display: none;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .wheelchair-selector {
+      display: flex;
+      width: 100%;
+    }
+
+    .wheelchair-selector:has(> button.selected) {
+      margin-bottom: 8px;
+      padding: 8px;
+    }
+
+    .wheelchair-selector>button {
+      outline: none;
+      border: 1px solid #24418c;
+      padding: 4px 16px;
+      color: #24418c;
+      cursor: pointer;
+      display: none;
+      flex: 1;
+    }
+
+    .wheelchair-selector>button:nth-child(1) {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .wheelchair-selector>button:nth-child(2) {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    .wheelchair-selector>button.selected {
+      background-color: #24418c;
+      color: white;
+    }
+
+    #instructions:has(> div) {
+      padding: 8px;
+      margin-top: 10px;
+    }
+
+    .instruction-box {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 4px;
+      padding: 4px;
+      border: 1px solid rgb(173, 224, 242);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .instruction-icon {
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .small-instruction-icon {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      min-height: 16px;
+      padding: 2px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .instruction-title {
+      font-size: 13px;
+    }
+
+    .instruction-subtitle {
+      font-size: 12px;
+    }
+
+    .highlighted {
+      background-color: #e3f2fd;
+    }
+
+    #add-destination-btn {
+      outline: none;
+      border: none;
+      padding: 4px 16px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+      background-color: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: none;
+      font-size: 14px;
+    }
+
+    #add-destination-btn:hover {
+      border-color: #e3f2fd;
+    }
+
+    #route-nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+    }
+
+    #prev-btn,
+    #next-btn {
+      outline: none;
+      border: none;
+      padding: 4px 16px;
+      border-radius: 4px;
+      background-color: #24418c;
+      color: white;
+      cursor: pointer;
+    }
+
+    .simple-instruction {
+      margin: 8px 10px;
+    }
+
+    .instruction-expand-icon {
+      width: 25px;
+      height: 25px;
+      margin-right: 8px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .custom-position-button {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      min-height: 18px;
+      margin-right: 8px;
+      background-image: url('../icons/pin.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .custom-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .custom-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="left-panel">
+    <!-- breadcrumb filters -->
+    <nav class="breadcrumbs">
+      <div class="breadcrumbs__item" id="site-filter">
+        <span>Changi</span>
+      </div>
+      <div class="breadcrumbs__item" id="building-filter">
+        <div>
+          <span id="breadcrumb-building-text">Building</span>
+          <span id="building-dropdown-icon"></span>
+        </div>
+        <div id="buildings-menu"></div>
+      </div>
+      <div class="breadcrumbs__item" id="floor-filter">
+        <div>
+          <span id="breadcrumb-floor-text">Floor</span>
+          <span id="floor-dropdown-icon"></span>
+        </div>
+        <div id="floors-menu"></div>
+      </div>
+    </nav>
+
+    <!-- routing board-->
+    <div class="routing-board">
+      <h1 class="title" >Routing</h1>
+      <div class="routing-container" id="routing-container"></div>
+      <button id="add-destination-btn">+ Add destination</button>
+      <div class="wheelchair-selector">
+        <button id="direct-btn">Direct</button>
+        <button id="accessible-btn">Accessible</button>
+      </div>
+      <div class="row-actions">
+        <button id="route-btn">go</button>
+        <button id="reset-route-btn">reset</button>
+      </div>
+
+      <div id="instructions"></div>
+      <div id="route-nav"></div>
+    </div>
+  </div>
+
+  <!--  map div attached with a callback -->
+  <div id="map" onclick="mapOnClick()"></div>
+
+  <!--  popup window div example -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="modal-body"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://atoms-sdk.dev.cag.spatialverse.online/2.0.0/lib/meta-atlas-sdk.umd.min.js"></script>
+
+  <!--  script for map -->
+  <script type="text/javascript">
+
+    const testSearchAPIs = () => {
+      atoms.getMapObjectsByName(
+        'nike',
+        true,
+        'Name',
+        (data) => {
+          data.forEach((value) => {
+            console.log(value.name, value.whereDimension);
+          });
+          console.log('Map object by name data', JSON.stringify(data));
+        },
+      );
+      // atoms.getMapObjectById(
+      //   '84e92805-f873-4855-b1f0-97afe0890da8',
+      //   (data) => {
+      //     console.log('Map object by id data', JSON.stringify(data));
+      //   },
+      // );
+      // atoms.getMapObjectByLocalRef(
+      //   'J1L2_02-232/233',
+      //   (data) => {
+      //     console.log('Map object by local ref data', JSON.stringify(data));
+      //   },
+      // );
+      // atoms.getMapObjectsByWhatTaxonomy(
+      //   'what.infra.lift',
+      //   (data) => {
+      //     console.log(
+      //       'Map object by what taxonomyPath data',
+      //       JSON.stringify(data),
+      //     );
+      //   },
+      // );
+      // atoms.getMapObjectsByWhereTaxonomy(
+      //   'where.changi.terminals.t2.b1',
+      //   (data) => {
+      //     console.log(
+      //       'Map object by where taxonomyPath data',
+      //       JSON.stringify(data),
+      //     );
+      //   },
+      // );
+      // atoms.getMapObjectsByWhatAndWhereTaxonomy(
+      //   'what.shop.fun',
+      //   'where.changi.terminals.t2.l2',
+      //   (data) => {
+      //     console.log(
+      //       'Map object by what and where taxonomyPath data',
+      //       JSON.stringify(data),
+      //     );
+      //   },
+      // );
+      // atoms.getMapObjectsInWhatTaxonomy(
+      //   ['what.infra.lift', 'what.service.toilet'],
+      //   (data) => {
+      //     console.log('getMapObjectsInWhatTaxonomy data', JSON.stringify(data));
+      //   },
+      // );
+      // atoms.getMapObjectsInWhereTaxonomy(
+      //   ['where.changi.terminals.t2.b1', 'where.changi.terminals.jewel.b2'],
+      //   (data) => {
+      //     console.log(
+      //       'getMapObjectsInWhereTaxonomy data',
+      //       data.length,
+      //       JSON.stringify(data),
+      //     );
+      //   },
+      // );
+      // atoms.getMapObjectsInWhatAndWhereTaxonomy(
+      //   ['what.infra.lift', 'what.other'],
+      //   ['where.changi.terminals.t2.b1', 'where.changi.terminals.jewel.b2'],
+      //   (data) => {
+      //     console.log(
+      //       'getMapObjectsInWhatAndWhereTaxonomy data',
+      //       data.length,
+      //       JSON.stringify(data),
+      //     );
+      //   },
+      // );
+    };
+
+    let atoms = null;
+    let popup = null;
+    let loadingIndicator = document.getElementById("loading_indicator");
+
+    // load map; args = api service url, api token
+    atoms = new metaAtlas.MetaAtlasSdk('6ea898d248133e81fb66649b23255a3ce8572bc30dab63277cbf6f74a2c7dcac', '7911y683-z093-yc17-z0x3-y045x76x',
+      () => {
+        console.log('map loaded!');
+        window.atoms = atoms;
+      },
+      (errorMessage) => {
+        console.log(errorMessage);
+      },
+      (loaded) => {
+        if (loaded) {
+          console.log('routing ready');
+          // setShowRoutingBoard(true);
+        } else {
+          console.log('failed to load routing');
+        }
+      },
+      (loaded) => {
+        if (loaded) {
+          console.log('search ready');
+          testSearchAPIs();
+        } else {
+          console.log('failed to load search functionality');
+        }
+      }
+    );
+
+    const role = 'changipublic';
+    atoms.setupMap(role, 'map');
+
+    //default floors
+    defaultFloors = {
+      "T1": "where.changi.terminals.t1.l1",
+      "T2": "where.changi.terminals.t2.l1",
+      "T3": "where.changi.terminals.t3.l1",
+      "T4": "where.changi.terminals.t4.l1",
+      "Jewel": "where.changi.terminals.jewel.l1"
+    }
+
+    //on user drag complete, the map will update focus
+    atoms.map.on('moveend', () => {
+      console.log('role', role, atoms.getActiveRoute());
+      if (role !== 'airside' && (atoms.getActiveRoute() === null || atoms.getActiveRoute() === undefined)) {
+        atoms.changeTerminalInFocusToUserViewpoint(defaultFloors);
+      }
+    });
+
+    //set up the custom focus selector
+    const focusTree = atoms.getFocusTree();
+
+    //on map click (tied to map div callback)
+    function mapOnClick() {
+
+      //ignore click if in draw mode
+      if (atoms.isInDrawMode()) return;
+
+      //if clicked on a map drawing (drawings first as they are shown above other map features)
+      let clickedDrawing = atoms.getLastClickedDrawing();
+      if (clickedDrawing.id !== null) {
+        mapOnClickDrawing(clickedDrawing);
+        return;
+      }
+
+      //if clicked on a CAG map feature
+      let clickedFeature = atoms.getLastClickedFeature();
+      if (clickedFeature.name !== null) {
+        mapOnClickFeature(clickedFeature);
+        return;
+      }
+    }
+
+    //on map click on a CAG map feature
+    function mapOnClickFeature(clickedFeature) {
+      atoms.map.flyTo({
+        center: atoms.getMidPointOfFeature(clickedFeature)
+      });
+
+      if (pickerIndex >= 0) {
+        destinations.splice(pickerIndex, 1, clickedFeature);
+        updateDestinations();
+        updateButtons();
+
+        resetRoute();
+      } else {
+        var popupContent =
+          '<b>' + clickedFeature.name + ' ' +
+          '<button type="button" id="map-popup-button" data-toggle="modal" data-target="#exampleModal">' +
+          '<b> > </b> </button>'
+          + '</b>';
+        document.getElementById("modal-body").innerHTML = '<pre>' +
+          JSON.stringify(clickedFeature, null, 2) + '</pre>';
+        atoms.dropPin(clickedFeature, popupContent);
+      }
+
+    }
+
+    //on map click on a map drawing
+    function mapOnClickDrawing(clickedDrawing) {
+      atoms.map.flyTo({
+        center: atoms.getMidPointOfFeature(clickedDrawing)
+      });
+      atoms.editDrawing(clickedDrawing.id);
+      //atoms.removeDrawing(clickedDrawing.id);
+    }
+
+    //function to do a drawing
+    function drawOnMap(mode) {
+      switch (mode) {
+        case 'point':
+          atoms.drawGeometryOnMap("draw_point", (feature) => {
+            console.log("point drawn", feature);
+            //get coordinates of point
+            let coords = atoms.getCoordinates(feature);
+            console.log(coords);
+            //add drawing to map
+            atoms.addDrawingsToBaseMap(feature);
+          }, true);
+          break;
+
+        case 'marker':
+          atoms.drawGeometryOnMap("draw_marker", (feature) => {
+            console.log("marker drawn", feature);
+            //get coords of marker
+            let coords = atoms.getCoordinates(feature);
+            console.log(coords);
+            //add drawing to map
+            atoms.addDrawingsToBaseMap(feature);
+          }, true);
+          break;
+
+        case 'line':
+          atoms.drawGeometryOnMap("draw_line_string", (feature) => {
+            console.log("line drawn", feature);
+            //get length of line
+            let length = atoms.getLength(feature, { units: 'meters' });
+            console.log(length);
+            //add drawing to map
+            atoms.addDrawingsToBaseMap(feature);
+          }, true);
+          break;
+
+        case 'polygon':
+          atoms.drawGeometryOnMap("draw_polygon", (feature) => {
+            console.log("polygon drawn", feature);
+            //get area of polygon
+            let area = atoms.getArea(feature);
+            console.log(area);
+            //add drawing to map
+            atoms.addDrawingsToBaseMap(feature);
+          }, true);
+          break;
+
+        default:
+          break;
+      }
+    }
+  </script>
+
+  <!--  script for breadcrumb filters -->
+  <!-- <script src="./scripts/filters.js"></script> -->
+
+  <!--  script for routing -->
+  <!-- <script src="./scripts/routing.js"></script> -->
+
+</body>
+
+</html>
+
+<!-- end of file -->
